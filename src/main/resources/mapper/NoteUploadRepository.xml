@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.akicat.knowledgeshare.repository.NoteUploadRepository">
+    <insert id="uploadNote">
+        INSERT
+        INTO knowledgeshare.t_note(note_title, note_simple_content, note_content, note_tag,user_id,note_cover)
+        VALUES (#{noteTitle},#{noteSimpleContent},#{noteContent},#{noteTag},#{userId},#{noteCover})
+    </insert>
+    <update id="updateNote">
+        UPDATE knowledgeshare.t_note
+        <set>
+            <if test="noteTitle != null and noteTitle != ''">
+                note_title = #{noteTitle},
+            </if>
+            <if test="noteSimpleContent != null and noteSimpleContent != ''">
+                note_simple_content = #{noteSimpleContent},
+            </if>
+            <if test="noteContent != null and noteContent != ''">
+                note_content = #{noteContent},
+            </if>
+            <if test="noteTag != null and noteTag != ''">
+                note_tag = #{noteTag},
+            </if>
+            <if test="noteCover != null and noteCover != ''">
+                note_cover = #{noteCover}
+            </if>
+        </set>
+        WHERE
+        note_id = #{noteId}
+    </update>
+</mapper>

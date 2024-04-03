@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.akicat.knowledgeshare.repository.UserRepository">
+    <insert id="registerUser">
+        INSERT
+        INTO knowledgeshare.m_user(user_name, password, email, birthday, gender, grade, interest, introduction,
+                                   access_code)
+        VALUES (#{userName}, #{password}, #{email}, #{birthday}, #{gender}, #{grade}, #{interest},
+                #{introduction},#{accessCode});
+    </insert>
+    <update id="editUser">
+        UPDATE
+        knowledgeshare.m_user
+        <set>
+            <if test="userName != null and userName != ''">
+                user_name = #{userName},
+            </if>
+            <if test="password != null and password != ''">
+                password = #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null and email != ''">
+                email = #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="birthday != null">
+                birthday = #{birthday,jdbcType=DATE},
+            </if>
+            <if test="gender != null">
+                gender = #{gender,jdbcType=TINYINT},
+            </if>
+            <if test="grade != null">
+                grade = #{grade,jdbcType=INTEGER},
+            </if>
+            <if test="interest != null and interest != ''">
+                interest = #{interest,jdbcType=VARCHAR},
+            </if>
+            <if test="introduction != null and introduction != ''">
+                introduction = #{introduction,jdbcType=LONGNVARCHAR},
+            </if>
+            update_date_time = now()
+        </set>
+        WHERE
+        user_id = #{userId,jdbcType=VARCHAR}
+    </update>
+    <update id="banUser">
+        UPDATE
+        knowledgeshare.m_user
+        SET
+            delete_flag = #{deleteFlag}
+        WHERE
+            user_id = #{userId}
+    </update>
+    <update id="setAsAdmin">
+        UPDATE knowledgeshare.m_user
+        SET
+            access_code = 1
+        WHERE user_id = #{userId}
+    </update>
+    <update id="setAsUser">
+        UPDATE knowledgeshare.m_user
+        SET
+            access_code = 2
+        WHERE user_id = #{userId}
+    </update>
+    <select id="selectUserByNameAndPass" resultType="com.akicat.knowledgeshare.eneity.UserEntity">
+        SELECT
+            user_id
+             , user_name
+             , password
+             , access_code
+             , email
+             , birthday
+             , gender
+             , grade
+             , interest
+             , introduction
+             , valid_start_time
+             , valid_end_time
+             , create_date_time
+             , update_date_time
+             , delete_flag
+        FROM
+            knowledgeshare.m_user
+        WHERE
+            user_name = #{userName, jdbcType=VARCHAR}
+          AND
+            password = #{password, jdbcType=VARCHAR}
+          AND
+            delete_flag = FALSE
+    </select>
+    <select id="getUser" resultType="com.akicat.knowledgeshare.eneity.UserEntity">
+        SELECT
+        *
+        FROM
+        knowledgeshare.m_user
+        WHERE
+        delete_flag = false
+        <if test="userId != null and userId != ''">
+            and user_id = #{userId,jdbcType=INTEGER}
+        </if>
+        <if test="userName != null and userName != ''">
+            and user_name = #{userName,jdbcType=VARCHAR}
+        </if>
+    </select>
+    <select id="getAllUser" resultType="com.akicat.knowledgeshare.eneity.UserEntity">
+        SELECT user_id,
+               user_name,
+               email,
+               birthday,
+               gender,
+               grade,
+               interest,
+               introduction,
+               valid_start_time,
+               valid_end_time,
+               delete_flag,
+               access_code
+        FROM knowledgeshare.m_user
+        WHERE access_code = 2
+    </select>
+    <select id="getUserById" resultType="com.akicat.knowledgeshare.eneity.UserEntity">
+        SELECT user_id,
+               user_name,
+               email,
+               birthday,
+               gender,
+               grade,
+               interest,
+               introduction,
+               valid_start_time,
+               valid_end_time,
+               delete_flag,
+               access_code
+        FROM knowledgeshare.m_user
+        WHERE user_id = #{userId}
+    </select>
+    <select id="getAllAdmin" resultType="com.akicat.knowledgeshare.eneity.UserEntity">
+        SELECT user_id,
+               user_name,
+               email,
+               birthday,
+               gender,
+               grade,
+               interest,
+               introduction,
+               valid_start_time,
+               valid_end_time,
+               delete_flag,
+               access_code
+        FROM knowledgeshare.m_user
+        WHERE access_code = 1
+    </select>
+    <select id="searchUser" resultType="com.akicat.knowledgeshare.eneity.UserEntity">
+        SELECT user_id,
+               user_name,
+               email,
+               birthday,
+               gender,
+               grade,
+               interest,
+               introduction,
+               valid_start_time,
+               valid_end_time,
+               delete_flag,
+               access_code
+        FROM knowledgeshare.m_user
+        WHERE m_user.user_name like concat('%',#{searchContent, jdbcType=VARCHAR},'%') and access_code = 2
+    </select>
+    <select id="searchAdmin" resultType="com.akicat.knowledgeshare.eneity.UserEntity">
+        SELECT user_id,
+               user_name,
+               email,
+               birthday,
+               gender,
+               grade,
+               interest,
+               introduction,
+               valid_start_time,
+               valid_end_time,
+               delete_flag,
+               access_code
+        FROM knowledgeshare.m_user
+        WHERE m_user.user_name like concat('%',#{searchContent, jdbcType=VARCHAR},'%') and access_code = 1
+    </select>
+</mapper>

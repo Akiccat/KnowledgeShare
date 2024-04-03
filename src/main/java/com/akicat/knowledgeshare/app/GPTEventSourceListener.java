@@ -17,12 +17,6 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-/**
- * 描述：OpenAIEventSourceListener
- *
- * @author https:www.unfbx.com
- * @date 2023-02-22
- */
 @Slf4j
 @RequiredArgsConstructor
 public class GPTEventSourceListener extends EventSourceListener {

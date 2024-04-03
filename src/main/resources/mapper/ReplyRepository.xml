@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.akicat.knowledgeshare.repository.ReplyRepository">
+    <insert id="sentReply">
+        INSERT
+        INTO knowledgeshare.t_reply(note_id, father_reply_id, user_id, reply_content, reply_time)
+        VALUES (#{noteId},#{replyId},#{userId},#{replyInputValue},now())
+    </insert>
+
+    <select id="getReplyById" parameterType="Integer" resultType="com.akicat.knowledgeshare.eneity.ReplyEntity">
+        SELECT t_reply.*, m_user.user_name
+        FROM knowledgeshare.t_reply
+                 LEFT JOIN knowledgeshare.m_user ON t_reply.user_id = m_user.user_id
+        WHERE reply_id = #{replyId}
+    </select>
+
+    <select id="getRepliesByNoteId" parameterType="Integer" resultType="com.akicat.knowledgeshare.eneity.ReplyEntity">
+        SELECT t_reply.*, m_user.user_name
+        FROM knowledgeshare.t_reply
+                 LEFT JOIN knowledgeshare.m_user ON t_reply.user_id = m_user.user_id
+        WHERE note_id = #{noteId}
+          AND father_reply_id IS NULL
+    </select>
+
+    <select id="getRepliesByFatherReplyId" parameterType="Integer" resultType="com.akicat.knowledgeshare.eneity.ReplyEntity">
+        SELECT t_reply.*, m_user.user_name
+        FROM knowledgeshare.t_reply
+                 LEFT JOIN knowledgeshare.m_user ON t_reply.user_id = m_user.user_id
+        WHERE father_reply_id = #{fatherReplyId}
+    </select>
+</mapper>

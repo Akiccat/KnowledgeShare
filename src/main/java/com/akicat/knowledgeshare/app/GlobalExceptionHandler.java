@@ -6,9 +6,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.servlet.http.HttpServletRequest;
 
-/**
- * @author plexpt
- */
+
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.akicat.knowledgeshare.repository.NoteRepository">
+    <insert id="starNote">
+        INSERT INTO knowledgeshare.t_favourite(user_id, note_id)
+        VALUES(#{userId},#{noteId})
+    </insert>
+    <update id="updateTag">
+        UPDATE knowledgeshare.t_note SET note_tag = #{noteTag} WHERE user_id = #{userId} and note_tag = (SELECT T3.note_tag From (SELECT T2.note_tag FROM knowledgeshare.t_note T2 WHERE T2.note_id = #{noteId}) T3)
+    </update>
+    <delete id="unStarNote">
+        DELETE FROM knowledgeshare.t_favourite WHERE note_id = #{noteId} AND user_id = #{userId}
+    </delete>
+    <delete id="deleteNote">
+        DELETE FROM knowledgeshare.t_note WHERE note_id = #{noteId};
+    </delete>
+    <delete id="deleteStarNote">
+        DELETE FROM knowledgeshare.t_favourite WHERE note_id = #{noteId}
+    </delete>
+    <delete id="deleteUserTag">
+        DELETE FROM knowledgeshare.t_note WHERE note_tag = #{noteTag} and user_id = #{userId};
+    </delete>
+    <select id="getNotes" resultType="com.akicat.knowledgeshare.eneity.NoteEntity">
+        SELECT note_title, note_simple_content, note_content, note_tag, note_id, t_note.user_id, note_cover,m_user.user_name
+        FROM knowledgeshare.t_note,knowledgeshare.m_user
+        WHERE t_note.user_id = m_user.user_id
+    </select>
+    <select id="getSearchNotes" resultType="com.akicat.knowledgeshare.eneity.NoteEntity">
+        SELECT note_title, note_simple_content, note_content, note_tag, note_id, t_note.user_id, note_cover,m_user.user_name
+        FROM knowledgeshare.t_note,knowledgeshare.m_user
+        WHERE note_title like concat('%',#{searchContent, jdbcType=VARCHAR},'%')
+          and t_note.user_id = m_user.user_id
+    </select>
+    <select id="getSearchNotesTag" resultType="com.akicat.knowledgeshare.eneity.NoteEntity">
+        SELECT note_title, note_simple_content, note_content, note_tag, note_id, t_note.user_id, note_cover,m_user.user_name
+        FROM knowledgeshare.t_note,knowledgeshare.m_user
+        WHERE note_tag like concat('%',#{searchContent, jdbcType=VARCHAR},'%')
+          and t_note.user_id = m_user.user_id
+    </select>
+    <select id="getNoteDetail" resultType="com.akicat.knowledgeshare.eneity.NoteEntity">
+        SELECT note_title, note_simple_content, note_content, note_tag, note_id, t_note.user_id, note_cover,m_user.user_name
+        FROM knowledgeshare.t_note,knowledgeshare.m_user
+        WHERE note_id = #{noteId}
+          and t_note.user_id = m_user.user_id
+    </select>
+    <select id="ifStart" resultType="com.akicat.knowledgeshare.eneity.NoteEntity">
+        SELECT * FROM knowledgeshare.t_favourite WHERE user_id = #{userId} AND note_id = #{noteId};
+    </select>
+    <select id="getStarNotes" resultType="com.akicat.knowledgeshare.eneity.NoteEntity">
+        SELECT distinct note_title, note_simple_content, note_content, note_tag, tn.note_id, tn.user_id, note_cover,mu.user_name
+        FROM knowledgeshare.t_favourite
+                 LEFT JOIN knowledgeshare.t_note tn on t_favourite.note_id = tn.note_id
+                 LEFT JOIN knowledgeshare.m_user mu on t_favourite.user_id = mu.user_id
+        WHERE t_favourite.user_id = #{userId}
+    </select>
+    <select id="getSearchStarNotesTag" resultType="com.akicat.knowledgeshare.eneity.NoteEntity">
+        SELECT distinct note_title, note_simple_content, note_content, note_tag, tn.note_id, tn.user_id, note_cover,mu.user_name
+        FROM knowledgeshare.t_favourite
+                 LEFT JOIN knowledgeshare.t_note tn on t_favourite.note_id = tn.note_id
+                 LEFT JOIN knowledgeshare.m_user mu on t_favourite.user_id = mu.user_id
+        WHERE t_favourite.user_id = #{userId} AND tn.note_tag like concat('%',#{searchContent, jdbcType=VARCHAR},'%');
+    </select>
+    <select id="getSearchStarNotes" resultType="com.akicat.knowledgeshare.eneity.NoteEntity">
+        SELECT distinct note_title, note_simple_content, note_content, note_tag, tn.note_id, tn.user_id, note_cover,mu.user_name
+        FROM knowledgeshare.t_favourite
+                 LEFT JOIN knowledgeshare.t_note tn on t_favourite.note_id = tn.note_id
+                 LEFT JOIN knowledgeshare.m_user mu on t_favourite.user_id = mu.user_id
+        WHERE t_favourite.user_id = #{userId}
+          AND note_title like concat('%',#{searchContent, jdbcType=VARCHAR},'%')
+    </select>
+    <select id="getNotesByUser" resultType="com.akicat.knowledgeshare.eneity.NoteEntity">
+        SELECT note_title, note_simple_content, note_content, note_tag, note_id, t_note.user_id, note_cover,m_user.user_name
+        FROM knowledgeshare.t_note,knowledgeshare.m_user
+        WHERE t_note.user_id = m_user.user_id and t_note.user_id = #{userId}
+    </select>
+    <select id="getSearchNotesTagUser" resultType="com.akicat.knowledgeshare.eneity.NoteEntity">
+        SELECT note_title, note_simple_content, note_content, note_tag, note_id, t_note.user_id, note_cover,m_user.user_name
+        FROM knowledgeshare.t_note,knowledgeshare.m_user
+        WHERE note_tag like concat('%',#{searchContent, jdbcType=VARCHAR},'%')
+          and t_note.user_id = m_user.user_id and t_note.user_id = #{userId}
+    </select>
+    <select id="getSearchNotesUser" resultType="com.akicat.knowledgeshare.eneity.NoteEntity">
+        SELECT note_title, note_simple_content, note_content, note_tag, note_id, t_note.user_id, note_cover,m_user.user_name
+        FROM knowledgeshare.t_note,knowledgeshare.m_user
+        WHERE note_title like concat('%',#{searchContent, jdbcType=VARCHAR},'%')
+          and t_note.user_id = m_user.user_id and t_note.user_id = #{userId}
+    </select>
+    <select id="searchTagByUser" resultType="com.akicat.knowledgeshare.eneity.NoteEntity">
+        SELECT note_title, note_simple_content, note_content, note_tag, note_id, t_note.user_id, note_cover,m_user.user_name
+        FROM knowledgeshare.t_note,knowledgeshare.m_user
+        WHERE note_tag like concat('%',#{searchContent, jdbcType=VARCHAR},'%')
+          and t_note.user_id = m_user.user_id and t_note.user_id = #{userId}
+    </select>
+</mapper>

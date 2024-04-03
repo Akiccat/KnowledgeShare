@@ -9,6 +9,6 @@
     <setting name="logImpl" value="STDOUT_LOGGING" />
   </settings>
   <typeAliases>
-    <package name="com.accenture.powerup.bookmng.entity" />
+    <package name="com.akicat.knowledgeshare.eneity" />
   </typeAliases>
 </configuration>

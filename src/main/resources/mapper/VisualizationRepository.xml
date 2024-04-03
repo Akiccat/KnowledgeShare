@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.akicat.knowledgeshare.repository.VisualizationRepository">
+  <select id="getPublishCountName" resultType="java.lang.String">
+    SELECT mu.user_name
+    FROM knowledgeshare.t_note
+           LEFT JOIN knowledgeshare.m_user mu on t_note.user_id = mu.user_id
+    group by t_note.user_id, mu.user_name;
+  </select>
+  <select id="getPublishCount" resultType="java.lang.String">
+    SELECT count(1) publish_count
+    FROM knowledgeshare.t_note
+           LEFT JOIN knowledgeshare.m_user mu on t_note.user_id = mu.user_id
+    group by t_note.user_id, mu.user_name;
+  </select>
+  <select id="getFavouriteCountName" resultType="java.lang.String">
+    SELECT tn.note_title
+    FROM knowledgeshare.t_favourite
+           LEFT JOIN knowledgeshare.t_note tn on t_favourite.note_id = tn.note_id
+    group by t_favourite.note_id, tn.note_title;
+  </select>
+  <select id="getFavouriteCount" resultType="java.lang.String">
+    SELECT count(1) favourite_count
+    FROM knowledgeshare.t_favourite
+           LEFT JOIN knowledgeshare.t_note tn on t_favourite.note_id = tn.note_id
+    group by t_favourite.note_id, tn.note_title;
+  </select>
+  <select id="getUserFrom" resultType="UserFromEntity">
+    SELECT reigon name,count(1) value
+    FROM knowledgeshare.m_user
+    group by m_user.reigon;
+  </select>
+  <select id="getReplyCount" resultType="ReplyCountEntity">
+    SELECT mu.user_name name, count(1) value
+    FROM knowledgeshare.t_reply
+           LEFT JOIN knowledgeshare.m_user mu on mu.user_id = t_reply.user_id
+    group by t_reply.user_id, mu.user_name;
+  </select>
+</mapper>

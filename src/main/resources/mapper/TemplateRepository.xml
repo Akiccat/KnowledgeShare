@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.akicat.knowledgeshare.repository.TemplateRepository">
+    <insert id="insertTemplate">
+        INSERT INTO knowledgeshare.t_temp(user_id, temp_content)
+        VALUES (#{userId}, #{tempContent})
+    </insert>
+    <delete id="deleteTemplate">
+        DELETE
+        FROM knowledgeshare.t_temp
+        WHERE user_id = #{userId}
+          and temp_id = #{tempId}
+    </delete>
+    <select id="getTemplate" resultType="com.akicat.knowledgeshare.eneity.TemplateEntity">
+        SELECT temp_id, user_id, temp_content
+        FROM knowledgeshare.t_temp
+        WHERE user_id = #{userId}
+    </select>
+</mapper>

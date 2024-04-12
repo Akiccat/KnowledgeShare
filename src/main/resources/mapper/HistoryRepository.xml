@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.akicat.knowledgeshare.repository.HistoryRepository">
+    <insert id="insertReplyHistory">
+        INSERT INTO knowledgeshare.t_history(user_id, history_content)
+        VALUES (#{userId}, #{historyContent})
+    </insert>
+    <delete id="deleteReplyHistory">
+        DELETE
+        FROM knowledgeshare.t_history
+        WHERE user_id = #{userId}
+          and history_id = #{historyId}
+    </delete>
+    <select id="getReplyHistory" resultType="com.akicat.knowledgeshare.eneity.HistoryEntity">
+        SELECT history_id, user_id, history_content
+        FROM knowledgeshare.t_history
+        WHERE user_id = #{userId}
+    </select>
+</mapper>
